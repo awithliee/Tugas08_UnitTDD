@@ -1,5 +1,15 @@
 export async function submitEnrollment(input, ports) {
+  // Validasi panjang idempotency key
+  if (
+    typeof input.idempotencyKey !== "string" ||
+    input.idempotencyKey.length < 16 ||
+    input.idempotencyKey.length > 64
+  ) {
+    return { code: "INVALID_KEY" };
+  }
+
   const scope = `${input.studentId}:${input.term}`;
+
   const fingerprint = JSON.stringify({
     studentId: input.studentId,
     classId: input.classId,
